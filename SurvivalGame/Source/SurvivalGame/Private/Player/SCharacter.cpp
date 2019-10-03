@@ -413,6 +413,21 @@ void ASCharacter::RestoreCondition(float HealthRestored, float HungerRestored)
 	}
 }
 
+void ASCharacter::AdjustSpeed(float SpeedModifier, float Length)
+{
+	//// Reduce Hunger, ensure we do not go outside of our bounds
+	//Hunger = FMath::Clamp(Hunger - HungerRestored, 0.0f, GetMaxHunger());
+
+	//// Restore Hitpoints
+	//Health = FMath::Clamp(Health + HealthRestored, 0.0f, GetMaxHealth());
+
+	ASPlayerController* PC = Cast<ASPlayerController>(Controller);
+	if (PC)
+	{
+		PC->ClientHUDMessage(EHUDMessage::Character_SpeedUp);
+	}
+}
+
 
 void ASCharacter::IncrementHunger()
 {

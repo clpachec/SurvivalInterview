@@ -14,6 +14,8 @@ enum class EHUDMessage : uint8
 
 	/* Character */
 	Character_EnergyRestored,
+	Character_SpeedUp,
+
 
 	/* Gamemode */
 	Game_SurviveStart,

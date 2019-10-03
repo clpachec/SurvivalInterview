@@ -123,6 +123,8 @@ FText ASPlayerController::GetText(EHUDMessage MsgID)
 		return LOCTEXT("WeaponSlotTaken", "Weapon slot already taken.");
 	case EHUDMessage::Character_EnergyRestored:
 		return LOCTEXT("CharacterEnergyRestored", "Energy Restored");
+	case EHUDMessage::Character_SpeedUp:
+		return LOCTEXT("CharacterSpeedUp", "Speed Up Activated");
 	case EHUDMessage::Game_SurviveStart:
 		return LOCTEXT("GameNightStart", "SURVIVE THE NIGHT");
 	case EHUDMessage::Game_SurviveEnded:

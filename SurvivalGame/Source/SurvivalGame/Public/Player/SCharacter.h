@@ -150,6 +150,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
 	void RestoreCondition(float HealthRestored, float HungerRestored);
 
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	void AdjustSpeed(float SpeedModifier, float Length);
+
 	/* Increments hunger, used by timer. */
 	void IncrementHunger();
 
