@@ -5,6 +5,9 @@
 #include "SPickupActor.h"
 #include "SSpeedActor.generated.h"
 
+/**
+ * Base class for Speed Up item. Consumable by players to gain a momentary speed boost
+ */
 UCLASS(ABSTRACT)
 class SURVIVALGAME_API ASSpeedActor : public ASPickupActor
 {
