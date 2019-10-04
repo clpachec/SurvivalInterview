@@ -24,6 +24,7 @@ ASCharacter::ASCharacter(const class FObjectInitializer& ObjectInitializer)
 	MoveComp->JumpZVelocity = 620;
 	MoveComp->bCanWalkOffLedgesWhenCrouching = true;
 	MoveComp->MaxWalkSpeedCrouched = 200;
+	MoveComp->MaxWalkSpeed = 100;
 
 	/* Ignore this channel or it will absorb the trace impacts instead of the skeletal mesh */
 	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
@@ -57,6 +58,10 @@ ASCharacter::ASCharacter(const class FObjectInitializer& ObjectInitializer)
 	HungerDamagePerInterval = 1.0f;
 	MaxHunger = 100;
 	Hunger = 0;
+	Speed = MoveComp->MaxWalkSpeed;
+	MaxSpeed = MoveComp->MaxWalkSpeed + 20;
+
+
 
 	/* Names as specified in the character skeleton */
 	WeaponAttachPoint = TEXT("WeaponSocket");
@@ -398,6 +403,17 @@ float ASCharacter::GetMaxHunger() const
 }
 
 
+float ASCharacter::GetSpeed() const
+{
+	return Speed;
+}
+
+float ASCharacter::GetMaxSpeed() const
+{
+	return MaxSpeed;
+}
+
+
 void ASCharacter::RestoreCondition(float HealthRestored, float HungerRestored)
 {
 	// Reduce Hunger, ensure we do not go outside of our bounds
@@ -415,11 +431,9 @@ void ASCharacter::RestoreCondition(float HealthRestored, float HungerRestored)
 
 void ASCharacter::AdjustSpeed(float SpeedModifier, float Length)
 {
-	//// Reduce Hunger, ensure we do not go outside of our bounds
-	//Hunger = FMath::Clamp(Hunger - HungerRestored, 0.0f, GetMaxHunger());
 
-	//// Restore Hitpoints
-	//Health = FMath::Clamp(Health + HealthRestored, 0.0f, GetMaxHealth());
+	//// Clamp Speed
+	Speed = FMath::Clamp(Speed + SpeedModifier, 0.0f, GetMaxSpeed());
 
 	ASPlayerController* PC = Cast<ASPlayerController>(Controller);
 	if (PC)

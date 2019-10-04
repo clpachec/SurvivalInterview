@@ -151,6 +151,12 @@ public:
 	void RestoreCondition(float HealthRestored, float HungerRestored);
 
 	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetSpeed() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetMaxSpeed() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
 	void AdjustSpeed(float SpeedModifier, float Length);
 
 	/* Increments hunger, used by timer. */
@@ -175,6 +181,13 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
 	float HungerDamagePerInterval;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition", Replicated)
+	float Speed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	float MaxSpeed;
+
 
 	/* Damage type applied when player suffers critical hunger */
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
