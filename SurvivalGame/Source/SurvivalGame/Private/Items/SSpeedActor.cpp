@@ -9,7 +9,7 @@ ASSpeedActor::ASSpeedActor(const class FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	/* A default to tweak per food variation in Blueprint */
-	SpeedModifier = 20;
+	SpeedModifier = -100;
 	Length = 5;
 
 	bAllowRespawn = true;

@@ -33,6 +33,9 @@ class SURVIVALGAME_API ASCharacter : public ASBaseCharacter
 
 private:
 
+	// Set a timer to increment speed every interval
+	FTimerHandle SpeedHandle;
+
 	/* Boom to handle distance to player mesh. */
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	USpringArmComponent* CameraBoomComp;
@@ -150,15 +153,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
 	void RestoreCondition(float HealthRestored, float HungerRestored);
 
-	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
-	float GetSpeed() const;
-
-	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
-	float GetMaxSpeed() const;
-
-	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
-	void AdjustSpeed(float SpeedModifier, float Length);
-
 	/* Increments hunger, used by timer. */
 	void IncrementHunger();
 
@@ -182,16 +176,37 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
 	float HungerDamagePerInterval;
 
-	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition", Replicated)
-	float Speed;
+	/* Damage type applied when player suffers critical hunger */
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	TSubclassOf<UDamageType> HungerDamageType;
+
+	/************************************************************************/
+	/* Speed                                                                */
+	/************************************************************************/
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetStartSpeed() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetCurrentSpeed() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	float GetMaxSpeed() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PlayerCondition")
+	void AdjustSpeed(float SpeedModifier, float Length);
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	float StartSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
+	float CurrentSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
 	float MaxSpeed;
 
-
-	/* Damage type applied when player suffers critical hunger */
-	UPROPERTY(EditDefaultsOnly, Category = "PlayerCondition")
-	TSubclassOf<UDamageType> HungerDamageType;
+	/*Inrements speed using a timer*/
+	void IncrementSpeed();
 
 	/************************************************************************/
 	/* Damage & Death                                                       */

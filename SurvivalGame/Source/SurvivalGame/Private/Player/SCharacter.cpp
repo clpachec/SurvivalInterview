@@ -58,8 +58,10 @@ ASCharacter::ASCharacter(const class FObjectInitializer& ObjectInitializer)
 	HungerDamagePerInterval = 1.0f;
 	MaxHunger = 100;
 	Hunger = 0;
-	Speed = MoveComp->MaxWalkSpeed;
-	MaxSpeed = MoveComp->MaxWalkSpeed + 20;
+
+	StartSpeed = MoveComp->MaxWalkSpeed;
+	CurrentSpeed = MoveComp->MaxWalkSpeed;
+	MaxSpeed = MoveComp->MaxWalkSpeed + 100;
 
 
 
@@ -402,18 +404,6 @@ float ASCharacter::GetMaxHunger() const
 	return MaxHunger;
 }
 
-
-float ASCharacter::GetSpeed() const
-{
-	return Speed;
-}
-
-float ASCharacter::GetMaxSpeed() const
-{
-	return MaxSpeed;
-}
-
-
 void ASCharacter::RestoreCondition(float HealthRestored, float HungerRestored)
 {
 	// Reduce Hunger, ensure we do not go outside of our bounds
@@ -429,20 +419,6 @@ void ASCharacter::RestoreCondition(float HealthRestored, float HungerRestored)
 	}
 }
 
-void ASCharacter::AdjustSpeed(float SpeedModifier, float Length)
-{
-
-	//// Clamp Speed
-	Speed = FMath::Clamp(Speed + SpeedModifier, 0.0f, GetMaxSpeed());
-
-	ASPlayerController* PC = Cast<ASPlayerController>(Controller);
-	if (PC)
-	{
-		PC->ClientHUDMessage(EHUDMessage::Character_SpeedUp);
-	}
-}
-
-
 void ASCharacter::IncrementHunger()
 {
 	Hunger = FMath::Clamp(Hunger + IncrementHungerAmount, 0.0f, GetMaxHunger());
@@ -457,6 +433,49 @@ void ASCharacter::IncrementHunger()
 	}
 }
 
+float ASCharacter::GetStartSpeed() const
+{
+	return StartSpeed;
+}
+
+float ASCharacter::GetCurrentSpeed() const
+{
+	return CurrentSpeed;
+}
+
+float ASCharacter::GetMaxSpeed() const
+{
+	return MaxSpeed;
+}
+
+void ASCharacter::AdjustSpeed(float SpeedModifier, float Length)
+{
+
+	//// Clamp Speed
+	CurrentSpeed = FMath::Clamp(CurrentSpeed, StartSpeed, GetStartSpeed() + SpeedModifier);
+
+	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
+	MoveComp->MaxWalkSpeed = GetStartSpeed()+SpeedModifier;
+
+
+	GetWorldTimerManager().SetTimer(SpeedHandle, this, &ASCharacter::IncrementSpeed, 1.0f, true);
+
+	ASPlayerController* PC = Cast<ASPlayerController>(Controller);
+	if (PC)
+	{
+		PC->ClientHUDMessage(EHUDMessage::Character_SpeedUp);
+	}
+}
+
+void ASCharacter::IncrementSpeed() {
+	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
+	MoveComp->MaxWalkSpeed--;
+	if (MoveComp->MaxWalkSpeed <= StartSpeed) {
+		GetWorldTimerManager().ClearTimer(SpeedHandle);
+	}
+
+	//Speed = FMath::Clamp(Speed + IncrementHungerAmount, 0.0f, GetMaxHunger());
+}
 
 void ASCharacter::OnDeath(float KillingDamage, FDamageEvent const& DamageEvent, APawn* PawnInstigator, AActor* DamageCauser)
 {
